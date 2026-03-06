@@ -1,0 +1,34 @@
+{
+  "title": "Belovodya UI",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Belovodya UI",
+        "description": "Настройка панели Belovodya UI.",
+        "data": {
+          "default_dashboard": "Путь Lovelace dashboard по умолчанию",
+          "sidebar_title": "Заголовок пункта в боковом меню",
+          "sidebar_icon": "Иконка пункта в боковом меню",
+          "require_admin": "Ограничить панель только администраторам"
+        }
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Belovodya UI уже настроен."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Belovodya UI",
+        "description": "Изменение настроек Belovodya UI.",
+        "data": {
+          "default_dashboard": "Путь Lovelace dashboard по умолчанию",
+          "sidebar_title": "Заголовок пункта в боковом меню",
+          "sidebar_icon": "Иконка пункта в боковом меню",
+          "require_admin": "Ограничить панель только администраторам"
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,5 @@
 {
   "name": "Belovodya UI",
   "render_readme": true,
-  "filename": "belovodya-ui.js",
   "homeassistant": "2024.1.0"
 }

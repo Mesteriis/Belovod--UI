@@ -1,61 +1,108 @@
 # Belovodya UI Engine
 
-Belovodya UI is a modular Home Assistant custom integration that registers its own panel and renders Lovelace dashboards through a custom Lit + TypeScript layout engine.
+Belovodya UI Engine — это кастомная интеграция Home Assistant, которая устанавливается через HACS, регистрирует собственную панель `/belovodya` и рендерит Lovelace dashboard через собственный UI-движок на Lit + TypeScript.
 
-## What It Does
+[![Open your Home Assistant instance and open this repository inside HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Mesteriis&repository=Belovod--UI&category=integration)
 
-- installs through HACS as a custom integration
-- ships a frontend bundle in `dist/` for dashboard/plugin-style distribution
-- registers a Home Assistant panel at `/belovodya`
-- reads Lovelace dashboard config through the official `lovelace/config` WebSocket command
-- reads Home Assistant navigation from `hass.panels`
-- renders Lovelace cards through the official `window.loadCardHelpers()` interface
-- isolates scroll to main content while keeping the shell fixed
+## Что умеет
 
-## HACS Installation
+- устанавливается через HACS как `Integration`
+- не требует ручного копирования файлов в `custom_components`
+- регистрирует отдельную панель Home Assistant: `/belovodya`
+- читает Lovelace config через официальный WebSocket `lovelace/config`
+- читает навигацию Home Assistant из `hass.panels`
+- рендерит Lovelace cards через официальный `window.loadCardHelpers()`
+- использует собственный layout engine с зонами `sidebar / navbar / main`
+- изолирует скролл внутри main content
 
-### Recommended: install as Integration
+## Важное ограничение Home Assistant
 
-1. Add this repository to HACS as a custom repository with category `Integration`.
-2. Install `Belovodya UI`.
-3. Restart Home Assistant.
-4. Go to `Settings -> Devices & Services -> Add Integration`.
-5. Add `Belovodya UI`.
-6. Open the new sidebar entry or navigate to `/belovodya`.
+HACS устанавливает файлы интеграции, но не создает `config entry` автоматически.
 
-### Repository structure for Dashboard/Plugin compatibility
+Это означает:
 
-The repository also ships `dist/belovodya-ui.js`, so it satisfies the HACS dashboard/plugin file layout as well. HACS still treats `Integration` and `Dashboard` as separate repository types, so the supported end-to-end install path for the full engine remains the `Integration` category.
+- путь `HACS -> Install` работает
+- ручное копирование файлов не нужно
+- после установки все равно нужен стандартный шаг Home Assistant: `Settings -> Devices & Services -> Add Integration -> Belovodya UI`
 
-## Panel Registration
+Полностью свести установку panel-интеграции к одному клику `Install` невозможно без обхода стандартной модели Home Assistant. Репозиторий приведен к максимально короткому штатному пути установки.
 
-The backend registers a custom panel using the official `panel_custom.async_register_panel` API.
+## Установка через HACS
 
-- panel URL: `/belovodya`
+1. Откройте HACS.
+2. Добавьте кастомный репозиторий `https://github.com/Mesteriis/Belovod--UI` с категорией `Integration`.
+3. Нажмите `Install` у `Belovodya UI`.
+4. Перезапустите Home Assistant.
+5. Откройте `Settings -> Devices & Services`.
+6. Нажмите `Add Integration`.
+7. Найдите `Belovodya UI`.
+8. После добавления откройте пункт в sidebar или перейдите на `/belovodya`.
+
+## Что установится через HACS
+
+HACS установит интеграцию в:
+
+```text
+custom_components/belovodya_ui/
+```
+
+Внутри интеграции уже лежит frontend bundle панели:
+
+```text
+custom_components/belovodya_ui/static/belovodya-ui.js
+```
+
+Дополнительный `frontend resource` вручную добавлять не нужно.
+
+## Как работает запуск панели
+
+После создания integration entry backend:
+
+1. регистрирует static path `/belovodya_ui_static`
+2. регистрирует custom panel через `panel_custom.async_register_panel`
+3. подключает web component `belovodya-app`
+4. передает panel config во frontend
+
+Параметры панели:
+
+- URL: `/belovodya`
 - web component: `belovodya-app`
-- bundle URL: `/belovodya_ui_static/belovodya-ui.js`
+- bundle: `/belovodya_ui_static/belovodya-ui.js`
 
-## Dashboard Lifecycle
+## Lifecycle панели
 
-When the panel opens, Belovodya UI:
+При открытии панели Belovodya UI:
 
-1. receives `hass`, `route`, `panel`, and `narrow` from Home Assistant
-2. reads sidebar navigation from `hass.panels`
-3. fetches Lovelace config with `lovelace/config`
-4. parses views and cards into a layout AST
-5. resolves the active Belovodya route
-6. renders sidebar, navbar, and main layout
+1. получает `hass`, `route`, `panel`, `narrow`
+2. считывает sidebar navigation из `hass.panels`
+3. получает Lovelace config через `lovelace/config`
+4. парсит `views` и `cards` в layout AST
+5. определяет активный route
+6. рендерит sidebar, navbar и main layout
 
-## Performance Model
+## Производительность
 
-- Sidebar and navbar are isolated custom elements and only update when their own inputs change.
-- Main layout updates independently from the shell.
-- Card creation is lazy and gated by `IntersectionObserver`.
-- DOM mutations are batched with `requestAnimationFrame`.
-- Card `hass` updates are diffed against relevant entity ids extracted from each card config.
-- The panel bundle is loaded only when the panel route is opened.
+Используемые оптимизации:
 
-## Frontend Build
+- shell-компоненты `sidebar` и `navbar` рендерятся изолированно
+- main content обновляется отдельно от shell
+- карточки создаются лениво через `IntersectionObserver`
+- DOM-изменения батчатся через `requestAnimationFrame`
+- обновление `hass` для карточек делается только при изменении релевантных entity
+- bundle панели загружается только при открытии `/belovodya`
+
+## Настройки интеграции
+
+Сейчас доступны параметры через config flow:
+
+- `default_dashboard`: путь Lovelace dashboard, который нужно открыть по умолчанию
+- `sidebar_title`: заголовок пункта в sidebar
+- `sidebar_icon`: иконка sidebar-пункта
+- `require_admin`: ограничение панели только для администратора
+
+Если `default_dashboard` пустой, Belovodya UI читает default Lovelace dashboard.
+
+## Разработка frontend
 
 ```bash
 cd frontend
@@ -63,27 +110,12 @@ npm install
 npm run build
 ```
 
-Build output:
+Результат сборки:
 
 - `dist/belovodya-ui.js`
 - `custom_components/belovodya_ui/static/belovodya-ui.js`
 
-## Integration Options
-
-Current config flow options:
-
-- `default_dashboard`: optional Lovelace dashboard URL path
-- `sidebar_title`
-- `sidebar_icon`
-- `require_admin`
-
-If `default_dashboard` is empty, Belovodya reads the default Lovelace dashboard.
-
-## Dashboard Support Notes
-
-Belovodya reads existing dashboards. It does not automatically create a Lovelace dashboard or rewrite Home Assistant's default dashboard configuration. That behavior is intentionally avoided to preserve Lovelace compatibility and Home Assistant navigation behavior.
-
-## Project Layout
+## Структура репозитория
 
 ```text
 custom_components/
@@ -120,3 +152,13 @@ dist/
 hacs.json
 README.md
 ```
+
+## Совместимость
+
+- Home Assistant `2024.1+`
+- HACS custom repository type: `Integration`
+
+## Поддержка
+
+- Issues: `https://github.com/Mesteriis/Belovod--UI/issues`
+- Repository: `https://github.com/Mesteriis/Belovod--UI`
