@@ -39,10 +39,13 @@ class BelovodyaSidebar extends LitElement {
               <a
                 class=${`sidebar__link${this._isActive(item.path) ? " sidebar__link--active" : ""}`}
                 href=${item.path}
+                title=${item.title}
                 @click=${this._handleNavigate}
                 data-path=${item.path}
               >
-                <span class="sidebar__icon">${item.icon}</span>
+                <span class="sidebar__icon" aria-hidden="true">
+                  <ha-icon .icon=${item.icon}></ha-icon>
+                </span>
                 <span class="sidebar__label">${item.title}</span>
               </a>
             `,

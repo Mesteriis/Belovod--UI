@@ -163,15 +163,18 @@ export const buildBreadcrumbs = (
   return breadcrumbs;
 };
 
+const toNavigationPath = (panel: PanelInfo): string =>
+  panel.url_path.startsWith("/") ? panel.url_path : `/${panel.url_path}`;
+
 const toNavigationItem = (panel: PanelInfo): HANavigationItem | undefined => {
   if (panel.show_in_sidebar === false || panel.url_path === "notfound") {
     return undefined;
   }
 
   return {
-    path: `/${panel.url_path}`,
-    title: panel.title || panel.url_path,
-    icon: panel.icon || "mdi:view-dashboard-outline",
+    path: toNavigationPath(panel),
+    title: panel.title?.trim() || panel.url_path,
+    icon: panel.icon?.trim() || "mdi:view-dashboard-outline",
   };
 };
 
@@ -180,3 +183,14 @@ export const extractNavigationItems = (hass: HomeAssistant): readonly HANavigati
     .filter((panel) => !panel.require_admin || hass.user?.is_admin)
     .map(toNavigationItem)
     .filter((panel): panel is HANavigationItem => panel !== undefined);
+
+export const sameNavigationItems = (
+  current: readonly HANavigationItem[],
+  next: readonly HANavigationItem[],
+): boolean => current.length === next.length && current.every((item, index) => {
+  const nextItem = next[index];
+  return nextItem !== undefined
+    && item.path === nextItem.path
+    && item.title === nextItem.title
+    && item.icon === nextItem.icon;
+});

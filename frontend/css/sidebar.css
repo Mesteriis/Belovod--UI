@@ -1,6 +1,7 @@
 :host {
   display: block;
   height: 100%;
+  min-height: 0;
 }
 
 .sidebar {
@@ -8,6 +9,7 @@
   flex-direction: column;
   gap: 24px;
   height: 100%;
+  min-height: 0;
   padding: 26px 22px 22px;
   background: var(--belovodya-panel);
   border-right: 1px solid var(--belovodya-border);
@@ -44,11 +46,12 @@
   gap: 10px;
   min-height: 0;
   overflow-y: auto;
+  padding-right: 4px;
 }
 
 .sidebar__link {
   display: grid;
-  grid-template-columns: minmax(0, 74px) minmax(0, 1fr);
+  grid-template-columns: 20px minmax(0, 1fr);
   align-items: center;
   gap: 12px;
   padding: 12px 14px;
@@ -72,11 +75,21 @@
 }
 
 .sidebar__icon {
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 20px;
+  block-size: 20px;
   color: var(--belovodya-accent-strong);
+}
+
+.sidebar__icon ha-icon {
+  --mdc-icon-size: 20px;
 }
 
 .sidebar__label {
   font-size: 0.97rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

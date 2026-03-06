@@ -1,6 +1,6 @@
 :host {
-  --belovodya-sidebar-width: calc(100vw / 5);
-  --belovodya-navbar-height: calc(100vh / 12);
+  --belovodya-sidebar-width: clamp(272px, 20%, 360px);
+  --belovodya-navbar-height: clamp(68px, 8.333%, 96px);
   --belovodya-gap: 18px;
   --belovodya-radius: 24px;
 
@@ -18,6 +18,11 @@
   --belovodya-shadow: 0 28px 60px rgba(0, 7, 12, 0.46);
   --belovodya-font: "Manrope", "IBM Plex Sans", "Avenir Next", sans-serif;
 
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
   color: var(--belovodya-text);
   background:
     radial-gradient(circle at 15% 20%, rgba(105, 196, 184, 0.22), transparent 28%),

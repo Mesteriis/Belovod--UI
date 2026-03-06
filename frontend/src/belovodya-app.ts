@@ -13,6 +13,7 @@ import {
   fetchLovelaceConfig,
   parseLovelaceDashboard,
   resolveViewForPath,
+  sameNavigationItems,
   type BelovodyaParsedDashboard,
   type BelovodyaParsedView,
 } from "./lovelace-parser";
@@ -82,7 +83,7 @@ class BelovodyaApp extends LitElement {
 
   protected override updated(changedProperties: Map<PropertyKey, unknown>): void {
     if (changedProperties.has("hass") && this.hass) {
-      this._navigation = extractNavigationItems(this.hass);
+      this._syncNavigation();
     }
 
     if ((changedProperties.has("hass") || changedProperties.has("panel")) && this.hass && this.panel) {
@@ -170,7 +171,7 @@ class BelovodyaApp extends LitElement {
         const dashboard = parseLovelaceDashboard(config, routeState.dashboardPath);
         this._dashboard = dashboard;
         this._dashboardPath = routeState.dashboardPath;
-        this._navigation = extractNavigationItems(this.hass as HomeAssistant);
+        this._syncNavigation();
         this._syncRoute(dashboard, panelConfig);
       } catch (error: unknown) {
         this._error = error instanceof Error ? error.message : "Unable to load Lovelace dashboard";
@@ -182,6 +183,19 @@ class BelovodyaApp extends LitElement {
     })();
 
     return this._loadTask;
+  }
+
+  private _syncNavigation(): void {
+    if (!this.hass) {
+      return;
+    }
+
+    const nextNavigation = extractNavigationItems(this.hass);
+    if (sameNavigationItems(this._navigation, nextNavigation)) {
+      return;
+    }
+
+    this._navigation = nextNavigation;
   }
 
   private _syncRoute(

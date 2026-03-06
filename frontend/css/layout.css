@@ -1,7 +1,10 @@
 :host {
-  height: 100vh;
-  width: 100vw;
   display: grid;
+  inline-size: 100%;
+  block-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: hidden;
   grid-template-columns: var(--belovodya-sidebar-width) minmax(0, 1fr);
   grid-template-rows: var(--belovodya-navbar-height) minmax(0, 1fr);
 }
@@ -10,12 +13,14 @@
   grid-column: 1;
   grid-row: 1 / span 2;
   min-width: 0;
+  min-height: 0;
 }
 
 .navbar {
   grid-column: 2;
   grid-row: 1;
   min-width: 0;
+  min-height: 0;
 }
 
 .main {
@@ -24,6 +29,7 @@
   min-width: 0;
   min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 18px 20px 24px;
 }
 
@@ -77,14 +83,14 @@
 
 @media (max-width: 1100px) {
   :host {
-    grid-template-columns: minmax(240px, 34vw) minmax(0, 1fr);
+    grid-template-columns: clamp(240px, 34%, 320px) minmax(0, 1fr);
   }
 }
 
 @media (max-width: 900px) {
   :host {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto minmax(0, 1fr);
+    grid-template-rows: auto var(--belovodya-navbar-height) minmax(0, 1fr);
   }
 
   .sidebar {
