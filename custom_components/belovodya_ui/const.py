@@ -4,7 +4,7 @@ from typing import Final
 
 DOMAIN: Final = "belovodya_ui"
 NAME: Final = "Belovodya UI"
-VERSION: Final = "0.0.1"
+VERSION: Final = "0.0.2"
 
 PANEL_COMPONENT_NAME: Final = "belovodya-app"
 PANEL_URL_PATH: Final = "belovodya"
