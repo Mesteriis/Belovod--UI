@@ -1,7 +1,7 @@
 {
   "domain": "belovodya_ui",
   "name": "Belovodya UI",
-  "version": "0.2.2",
+  "version": "0.0.1",
   "documentation": "https://github.com/Mesteriis/Belovod--UI",
   "issue_tracker": "https://github.com/Mesteriis/Belovod--UI/issues",
   "integration_type": "hub",
