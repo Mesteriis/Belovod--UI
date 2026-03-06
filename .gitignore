@@ -1,0 +1,4 @@
+frontend/node_modules/
+custom_components/**/__pycache__/
+*.pyc
+.DS_Store

@@ -1,0 +1,16 @@
+{
+  "name": "belovodya-ui-frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build && mkdir -p ../custom_components/belovodya_ui/static && cp ../dist/belovodya-ui.js ../custom_components/belovodya_ui/static/belovodya-ui.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "lit": "^3.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2",
+    "vite": "^6.2.6"
+  }
+}

@@ -1,0 +1,21 @@
+:host {
+  --belovodya-fade-duration: 220ms;
+}
+
+@keyframes belovodya-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sidebar,
+.navbar,
+.main {
+  animation: belovodya-fade-up var(--belovodya-fade-duration) ease;
+}

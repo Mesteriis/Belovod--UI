@@ -1,0 +1,40 @@
+:host {
+  display: block;
+}
+
+.belovodya-layout-card {
+  display: block;
+  grid-column: span var(--belovodya-card-column-span, 3);
+  grid-row: span var(--belovodya-card-row-span, 1);
+  min-height: var(--belovodya-card-min-height, 220px);
+}
+
+.belovodya-card-shell {
+  height: 100%;
+  min-height: inherit;
+  padding: 2px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(123, 165, 184, 0.14), rgba(6, 16, 24, 0.04));
+}
+
+.belovodya-card-mount,
+.belovodya-card-mount > * {
+  display: block;
+  height: 100%;
+}
+
+.belovodya-card-mount > * {
+  min-height: inherit;
+}
+
+.belovodya-card-error {
+  display: grid;
+  place-items: center;
+  min-height: inherit;
+  padding: 22px;
+  border-radius: 20px;
+  background: rgba(18, 26, 33, 0.92);
+  border: 1px dashed rgba(255, 111, 97, 0.5);
+  color: var(--belovodya-danger);
+  text-align: center;
+}

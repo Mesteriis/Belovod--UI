@@ -1,0 +1,124 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  height: 100%;
+  padding: 18px 22px 14px;
+  background: linear-gradient(180deg, rgba(6, 16, 24, 0.86), rgba(6, 16, 24, 0.58));
+  border-bottom: 1px solid var(--belovodya-border);
+  backdrop-filter: blur(18px);
+}
+
+.navbar__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.navbar__breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--belovodya-text-muted);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.navbar__crumb::after {
+  content: "/";
+  margin-left: 10px;
+  opacity: 0.35;
+}
+
+.navbar__crumb:last-child::after {
+  display: none;
+}
+
+.navbar__title {
+  font-size: 1.36rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navbar__controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.navbar__search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(10, 24, 36, 0.72);
+  border: 1px solid rgba(123, 165, 184, 0.18);
+}
+
+.navbar__search-label {
+  color: var(--belovodya-text-muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.navbar__search-input {
+  width: min(280px, 26vw);
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar__action {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(167, 228, 181, 0.22);
+  background: linear-gradient(135deg, rgba(105, 196, 184, 0.14), rgba(167, 228, 181, 0.08));
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.navbar__action--ghost {
+  background: rgba(10, 24, 36, 0.54);
+}
+
+@media (max-width: 900px) {
+  .navbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .navbar__controls {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .navbar__search {
+    flex: 1 1 auto;
+  }
+
+  .navbar__search-input {
+    width: 100%;
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "domain": "belovodya_ui",
+  "name": "Belovodya UI",
+  "version": "0.2.0",
+  "integration_type": "hub",
+  "config_flow": true,
+  "codeowners": [],
+  "dependencies": [
+    "frontend",
+    "lovelace",
+    "panel_custom"
+  ]
+}
