@@ -1,37 +1,97 @@
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("/belovodya_ui_static/fonts/space-grotesk-latin.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: swap;
+  src: url("/belovodya_ui_static/fonts/cinzel-latin.woff2") format("woff2");
+}
+
 :host {
-  --belovodya-sidebar-width: clamp(272px, 20%, 360px);
-  --belovodya-navbar-height: clamp(68px, 8.333%, 96px);
-  --belovodya-gap: 18px;
-  --belovodya-radius: 24px;
+  --belovodya-sidebar-width: 256px;
+  --belovodya-shell-inset-top: 18px;
+  --belovodya-shell-inset-bottom: 16px;
+  --belovodya-shell-inset-inline: clamp(10px, 1.8vw, 22px);
+  --belovodya-gap: 14px;
+  --belovodya-radius: 18px;
 
-  --belovodya-bg: #061018;
-  --belovodya-surface: rgba(11, 25, 36, 0.84);
-  --belovodya-surface-strong: rgba(7, 18, 28, 0.96);
-  --belovodya-panel: linear-gradient(180deg, rgba(9, 24, 36, 0.98), rgba(7, 18, 28, 0.96));
-  --belovodya-card-bg: rgba(10, 26, 37, 0.82);
-  --belovodya-border: rgba(123, 165, 184, 0.2);
-  --belovodya-accent: #69c4b8;
-  --belovodya-accent-strong: #a7e4b5;
-  --belovodya-text: #edf7f7;
-  --belovodya-text-muted: #9ab5bb;
+  --belovodya-bg: #06121a;
+  --belovodya-bg-soft: #0a1a24;
+  --belovodya-surface: rgba(8, 20, 31, 0.76);
+  --belovodya-surface-strong: rgba(10, 24, 36, 0.9);
+  --belovodya-panel: linear-gradient(180deg, rgba(6, 14, 22, 0.97), rgba(5, 11, 19, 0.95));
+  --belovodya-card-bg: rgba(10, 24, 36, 0.74);
+  --belovodya-border: rgba(132, 170, 188, 0.22);
+  --belovodya-accent: #2dd4bf;
+  --belovodya-accent-soft: #6ef2dc;
+  --belovodya-text: #e7eff6;
+  --belovodya-text-muted: #9db3c5;
   --belovodya-danger: #ff6f61;
-  --belovodya-shadow: 0 28px 60px rgba(0, 7, 12, 0.46);
-  --belovodya-font: "Manrope", "IBM Plex Sans", "Avenir Next", sans-serif;
+  --belovodya-shadow: 0 28px 60px rgba(0, 0, 0, 0.48);
+  --belovodya-font: "Space Grotesk", "Segoe UI", sans-serif;
+  --belovodya-display-font: "Cinzel", "Space Grotesk", serif;
 
-  display: block;
-  inline-size: 100%;
-  block-size: 100%;
+  position: fixed;
+  inset: 0;
+  z-index: 2147483600;
+  inline-size: 100vw;
+  block-size: 100dvh;
   min-inline-size: 0;
   min-block-size: 0;
+  overflow: hidden;
   color: var(--belovodya-text);
-  background:
-    radial-gradient(circle at 15% 20%, rgba(105, 196, 184, 0.22), transparent 28%),
-    radial-gradient(circle at 85% 10%, rgba(167, 228, 181, 0.14), transparent 22%),
-    linear-gradient(180deg, #051018 0%, #091822 100%);
   font-family: var(--belovodya-font);
+  background-color: var(--belovodya-bg);
+  background-image:
+    radial-gradient(circle at 62% -4%, rgba(46, 157, 168, 0.14), transparent 30%),
+    radial-gradient(circle at 18% 10%, rgba(26, 140, 131, 0.22), transparent 38%),
+    radial-gradient(circle at 82% 84%, rgba(18, 96, 98, 0.2), transparent 42%),
+    linear-gradient(168deg, #02060d 0%, #05131c 40%, #062118 74%, #030c14 100%);
+}
+
+:host::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(2, 6, 10, 0.44) 0%, rgba(2, 8, 14, 0.06) 44%, rgba(2, 7, 12, 0.5) 100%),
+    radial-gradient(circle at 50% -8%, rgba(127, 229, 216, 0.08), transparent 38%);
+}
+
+:host::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 8% 18%, rgba(83, 236, 215, 0.08), transparent 36%),
+    radial-gradient(circle at 92% 82%, rgba(85, 172, 224, 0.08), transparent 34%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(213, 240, 255, 0.016) 0,
+      rgba(213, 240, 255, 0.016) 1px,
+      rgba(2, 7, 13, 0) 1px,
+      rgba(2, 7, 13, 0) 4px
+    );
+  opacity: 0.84;
+  mix-blend-mode: screen;
 }
 
 :host,
 :host * {
   box-sizing: border-box;
+}
+
+:host([sidebar-collapsed]) {
+  --belovodya-sidebar-width: 96px;
 }

@@ -32,6 +32,27 @@ export interface HomeAssistant {
   localize?(key: string, placeholders?: Record<string, string>): string | undefined;
 }
 
+export interface PersistentNotification {
+  message?: string;
+  notification_id: string;
+  status?: string;
+  title?: string;
+}
+
+export interface RepairsIssue {
+  breaks_in_ha_version?: string | null;
+  domain?: string;
+  issue_id?: string;
+  learn_more_url?: string | null;
+  severity?: string;
+  translation_key?: string;
+  translation_placeholders?: Record<string, string>;
+}
+
+export interface RepairsIssuesResponse {
+  issues?: readonly RepairsIssue[];
+}
+
 export interface Route {
   path: string;
   prefix: string;
@@ -49,10 +70,17 @@ export interface BelovodyaPanelRuntimeConfig {
 
 export interface BelovodyaPanelInfo extends PanelInfo<BelovodyaPanelRuntimeConfig> {}
 
+export type HANavigationSection = "main" | "utility";
+export type HANavigationActionKind = "path" | "native-click";
+
 export interface HANavigationItem {
-  path: string;
+  id: string;
+  path: string | null;
   title: string;
   icon: string;
+  section: HANavigationSection;
+  actionKind: HANavigationActionKind;
+  nativeClass: string | null;
 }
 
 export interface LovelaceCardConfig {
@@ -63,6 +91,7 @@ export interface LovelaceCardConfig {
 
 export interface LovelaceSectionConfig {
   title?: string;
+  type?: string;
   cards?: LovelaceCardConfig[];
   [key: string]: unknown;
 }
@@ -88,13 +117,48 @@ export interface LovelaceStrategyConfig {
 
 export type LovelaceRawConfig = LovelaceConfig | LovelaceStrategyConfig;
 
+export interface LovelaceResource {
+  id: string;
+  type: "css" | "js" | "module" | "html";
+  url: string;
+}
+
 export interface CardHelpers {
+  createBadgeElement?(config: Record<string, unknown>): HTMLElement;
   createCardElement(config: LovelaceCardConfig): LovelaceCardElement;
+  createHeaderFooterElement?(config: Record<string, unknown>): HTMLElement;
+  createHuiElement?(config: Record<string, unknown>): HTMLElement;
+  createRowElement?(config: Record<string, unknown>): HTMLElement;
+  importMoreInfoControl?(type: string): Promise<unknown>;
+  showAlertDialog?(params: Record<string, unknown>): Promise<unknown>;
+  showConfirmationDialog?(params: Record<string, unknown>): Promise<unknown>;
+  showEnterCodeDialog?(params: Record<string, unknown>): Promise<unknown>;
+  showPromptDialog?(params: Record<string, unknown>): Promise<unknown>;
 }
 
 export interface LovelaceCardElement extends HTMLElement {
   hass?: HomeAssistant;
   setConfig(config: LovelaceCardConfig): void;
+}
+
+export interface LovelaceCardEditorElement extends HTMLElement {
+  hass?: HomeAssistant;
+  lovelace?: LovelaceConfig;
+  setConfig(config: LovelaceCardConfig): void;
+}
+
+export interface LovelaceEditorChangeDetail {
+  config: LovelaceCardConfig;
+  error?: string;
+  guiModeAvailable?: boolean;
+}
+
+export type BelovodyaLayoutVariant = "native" | "dense" | "focus" | "stack";
+
+export interface BelovodyaLayoutVariantOption {
+  value: BelovodyaLayoutVariant;
+  label: string;
+  description: string;
 }
 
 export interface NavigateOptions {
@@ -104,6 +168,7 @@ export interface NavigateOptions {
 declare global {
   interface Window {
     loadCardHelpers?: () => Promise<CardHelpers>;
+    customCards?: Array<Record<string, unknown>>;
   }
 
   interface HTMLElementTagNameMap {
@@ -112,5 +177,6 @@ declare global {
     "belovodya-sidebar": HTMLElement;
     "belovodya-navbar": HTMLElement;
     "belovodya-card-host": HTMLElement;
+    "belovodya-card-editor-dialog": HTMLElement;
   }
 }

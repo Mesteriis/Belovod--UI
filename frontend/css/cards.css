@@ -3,10 +3,15 @@
 }
 
 .belovodya-layout-card {
+  position: relative;
   display: block;
   grid-column: span var(--belovodya-card-column-span, 3);
   grid-row: span var(--belovodya-card-row-span, 1);
   min-height: var(--belovodya-card-min-height, 220px);
+}
+
+.belovodya-layout-card--editable {
+  padding-top: 34px;
 }
 
 .belovodya-card-shell {
@@ -37,4 +42,30 @@
   border: 1px dashed rgba(255, 111, 97, 0.5);
   color: var(--belovodya-danger);
   text-align: center;
+}
+
+.belovodya-card-edit-chip {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(112, 242, 221, 0.38);
+  background: linear-gradient(146deg, rgba(16, 54, 59, 0.88), rgba(10, 24, 36, 0.92));
+  color: rgba(228, 241, 247, 0.96);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+}
+
+.belovodya-card-edit-chip svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 1.5;
 }

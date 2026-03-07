@@ -90,7 +90,8 @@ async def async_register_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
         sidebar_title=panel_config[CONF_SIDEBAR_TITLE],
         sidebar_icon=panel_config[CONF_SIDEBAR_ICON],
         module_url=(
-            f"{STATIC_URL_BASE}/{FRONTEND_BUNDLE_FILENAME}?v={panel_config['engine_version']}"
+            f"{STATIC_URL_BASE}/{FRONTEND_BUNDLE_FILENAME}"
+            f"?v={panel_config['engine_version']}-{int(_BUNDLE_PATH.stat().st_mtime_ns)}"
         ),
         config=panel_config,
         require_admin=panel_config[CONF_REQUIRE_ADMIN],

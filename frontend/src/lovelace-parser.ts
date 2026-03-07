@@ -1,5 +1,5 @@
 import { createCardNodeFromConfig, createGridNode, readLayoutHint } from "./layout-engine/layout-grid";
-import type { LayoutNode } from "./layout-engine/layout-node";
+import type { LayoutNode, LayoutPath } from "./layout-engine/layout-node";
 import { createOverlayNode, createStackNode } from "./layout-engine/layout-stack";
 import type {
   HANavigationItem,
@@ -16,6 +16,7 @@ const LOVELACE_CONFIG_COMMAND = "lovelace/config";
 
 export interface BelovodyaParsedView {
   key: string;
+  index: number;
   title: string;
   layout: LayoutNode;
   raw: LovelaceViewConfig;
@@ -36,18 +37,18 @@ const normalizeViewKey = (view: LovelaceViewConfig, index: number): string =>
 const normalizeViewTitle = (view: LovelaceViewConfig, index: number): string =>
   view.title?.trim() || `View ${index + 1}`;
 
-const parseCard = (card: LovelaceCardConfig, id: string): LayoutNode => {
+const parseCard = (card: LovelaceCardConfig, id: string, path: LayoutPath): LayoutNode => {
   const hint = readLayoutHint(card);
 
   if (card.type === "grid" && Array.isArray(card.cards)) {
-    const children = parseCards(card.cards as LovelaceCardConfig[], `${id}-grid`);
+    const children = parseCards(card.cards as LovelaceCardConfig[], `${id}-grid`, [...path, "cards"]);
     return createGridNode(id, children, typeof hint.columns === "number" ? hint.columns : 2);
   }
 
   if (card.type === "horizontal-stack" && Array.isArray(card.cards)) {
     return createStackNode(
       id,
-      parseCards(card.cards as LovelaceCardConfig[], `${id}-horizontal-stack`),
+      parseCards(card.cards as LovelaceCardConfig[], `${id}-horizontal-stack`, [...path, "cards"]),
       "horizontal",
     );
   }
@@ -55,7 +56,7 @@ const parseCard = (card: LovelaceCardConfig, id: string): LayoutNode => {
   if (card.type === "vertical-stack" && Array.isArray(card.cards)) {
     return createStackNode(
       id,
-      parseCards(card.cards as LovelaceCardConfig[], `${id}-vertical-stack`),
+      parseCards(card.cards as LovelaceCardConfig[], `${id}-vertical-stack`, [...path, "cards"]),
       "vertical",
     );
   }
@@ -63,20 +64,23 @@ const parseCard = (card: LovelaceCardConfig, id: string): LayoutNode => {
   if (hint.layout === "stack" && Array.isArray(card.cards)) {
     return createStackNode(
       id,
-      parseCards(card.cards as LovelaceCardConfig[], `${id}-stack`),
+      parseCards(card.cards as LovelaceCardConfig[], `${id}-stack`, [...path, "cards"]),
       hint.direction ?? "vertical",
     );
   }
 
   if (hint.layout === "overlay" && Array.isArray(card.cards)) {
-    return createOverlayNode(id, parseCards(card.cards as LovelaceCardConfig[], `${id}-overlay`));
+    return createOverlayNode(id, parseCards(card.cards as LovelaceCardConfig[], `${id}-overlay`, [...path, "cards"]));
   }
 
-  return createCardNodeFromConfig(id, card);
+  return createCardNodeFromConfig(id, card, path);
 };
 
-const parseCards = (cards: readonly LovelaceCardConfig[], prefix: string): readonly LayoutNode[] =>
-  cards.map((card, index) => parseCard(card, `${prefix}-card-${index}`));
+const parseCards = (
+  cards: readonly LovelaceCardConfig[],
+  prefix: string,
+  pathPrefix: LayoutPath,
+): readonly LayoutNode[] => cards.map((card, index) => parseCard(card, `${prefix}-card-${index}`, [...pathPrefix, index]));
 
 const parseSections = (
   sections: readonly LovelaceSectionConfig[],
@@ -85,7 +89,7 @@ const parseSections = (
   const children = sections.map((section, index) =>
     createStackNode(
       `${prefix}-section-${index}`,
-      parseCards(section.cards ?? [], `${prefix}-section-${index}`),
+      parseCards(section.cards ?? [], `${prefix}-section-${index}`, ["sections", index, "cards"]),
       "vertical",
     ),
   );
@@ -99,10 +103,11 @@ const parseView = (view: LovelaceViewConfig, index: number): BelovodyaParsedView
 
   const layout = Array.isArray(view.sections) && view.sections.length > 0
     ? parseSections(view.sections, `view-${key}`)
-    : createGridNode(`view-${key}`, parseCards(view.cards ?? [], `view-${key}`));
+    : createGridNode(`view-${key}`, parseCards(view.cards ?? [], `view-${key}`, ["cards"]));
 
   return {
     key,
+    index,
     title,
     layout,
     raw: view,
@@ -172,9 +177,13 @@ const toNavigationItem = (panel: PanelInfo): HANavigationItem | undefined => {
   }
 
   return {
+    id: `panel-${panel.url_path}`,
     path: toNavigationPath(panel),
     title: panel.title?.trim() || panel.url_path,
     icon: panel.icon?.trim() || "mdi:view-dashboard-outline",
+    section: "main",
+    actionKind: "path",
+    nativeClass: null,
   };
 };
 

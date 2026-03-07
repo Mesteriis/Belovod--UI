@@ -15,6 +15,8 @@ const normalizeSegments = (path: string): string[] =>
     .map((segment) => segment.trim())
     .filter(Boolean);
 
+const isBelovodyaPath = (path: string): boolean => path === "/belovodya" || path.startsWith("/belovodya/");
+
 export const parseBelovodyaRoute = (
   route: Route,
   panelConfig: BelovodyaPanelRuntimeConfig,
@@ -94,4 +96,18 @@ export const navigatePath = (path: string, options: NavigateOptions = {}): void 
   }) as Event & { detail?: NavigateOptions };
   event.detail = { replace };
   window.dispatchEvent(event);
+};
+
+export const navigateToPanelPath = (path: string, options: NavigateOptions = {}): void => {
+  if (isBelovodyaPath(path)) {
+    navigatePath(path, options);
+    return;
+  }
+
+  if (options.replace ?? false) {
+    window.location.replace(path);
+    return;
+  }
+
+  window.location.assign(path);
 };

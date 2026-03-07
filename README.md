@@ -102,6 +102,28 @@ custom_components/belovodya_ui/static/belovodya-ui.js
 
 Если `default_dashboard` пустой, Belovodya UI читает default Lovelace dashboard.
 
+## Документация для разработки
+
+Точка входа в локальную dev-документацию: [DEVELOPMENT.md](./DEVELOPMENT.md).
+
+Разделы:
+
+- [docs/frontend.md](./docs/frontend.md)
+- [docs/backend.md](./docs/backend.md)
+- [docs/runtime-dev.md](./docs/runtime-dev.md)
+
+Быстрый локальный цикл:
+
+```bash
+./scripts/dev-sync.sh
+```
+
+Или:
+
+```bash
+make dev-sync
+```
+
 ## Разработка frontend
 
 ```bash

@@ -4,6 +4,7 @@ import type {
   LayoutCardNode,
   LayoutGridNode,
   LayoutNode,
+  LayoutPath,
 } from "./layout-node";
 import { createFloatingNode, createOverlayNode } from "./layout-stack";
 
@@ -71,6 +72,7 @@ const wrapCardNode = (
 export const createCardNodeFromConfig = (
   id: string,
   config: LovelaceCardConfig,
+  path: LayoutPath,
 ): LayoutNode => {
   const hint = readLayoutHint(config);
 
@@ -78,6 +80,7 @@ export const createCardNodeFromConfig = (
     id,
     kind: "card",
     config,
+    path,
     columnSpan: Math.max(1, numberOr(hint.columnspan, 3)),
     rowSpan: Math.max(1, numberOr(hint.rowspan, 1)),
     minHeight: typeof hint.min_height === "string" ? hint.min_height : undefined,

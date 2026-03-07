@@ -1,0 +1,196 @@
+.belovodya-editor-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483640;
+  background: rgba(1, 8, 15, 0.62);
+  backdrop-filter: blur(6px);
+}
+
+.belovodya-editor {
+  position: fixed;
+  inset: 24px 24px 24px 280px;
+  z-index: 2147483641;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 24px;
+  border: 1px solid rgba(130, 184, 217, 0.2);
+  background: linear-gradient(180deg, rgba(8, 18, 28, 0.96), rgba(7, 15, 24, 0.98));
+  box-shadow: 0 36px 84px rgba(0, 0, 0, 0.48);
+  overflow: hidden;
+}
+
+.belovodya-editor__header,
+.belovodya-editor__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.belovodya-editor__eyebrow {
+  margin: 0 0 6px;
+  font-size: 0.76rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(118, 232, 215, 0.74);
+}
+
+.belovodya-editor__title {
+  margin: 0;
+  font-family: var(--belovodya-display-font);
+  font-size: 1.6rem;
+  color: rgba(226, 240, 250, 0.96);
+}
+
+.belovodya-editor__meta {
+  margin: 6px 0 0;
+  color: rgba(158, 186, 205, 0.84);
+  font-size: 0.88rem;
+}
+
+.belovodya-editor__header-actions,
+.belovodya-editor__footer-actions,
+.belovodya-editor__tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.belovodya-editor__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 16px;
+  min-height: 0;
+}
+
+.belovodya-editor__pane,
+.belovodya-editor__preview {
+  min-height: 0;
+  border-radius: 20px;
+  border: 1px solid rgba(100, 145, 170, 0.22);
+  background: linear-gradient(166deg, rgba(10, 25, 38, 0.82), rgba(6, 15, 24, 0.72));
+  overflow: hidden;
+}
+
+.belovodya-editor__pane {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.belovodya-editor__tabs {
+  padding: 14px;
+  border-bottom: 1px solid rgba(100, 145, 170, 0.16);
+}
+
+.belovodya-editor__tab,
+.belovodya-editor__button,
+.belovodya-editor__icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(120, 183, 218, 0.24);
+  background: linear-gradient(150deg, rgba(16, 37, 57, 0.62), rgba(10, 26, 42, 0.44));
+  color: rgba(223, 241, 255, 0.94);
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.belovodya-editor__tab--active,
+.belovodya-editor__button--primary {
+  border-color: rgba(112, 242, 221, 0.52);
+  background: linear-gradient(150deg, rgba(21, 69, 79, 0.78), rgba(13, 34, 53, 0.6));
+}
+
+.belovodya-editor__icon-button {
+  width: 42px;
+  padding: 0;
+}
+
+.belovodya-editor__button[disabled],
+.belovodya-editor__icon-button[disabled],
+.belovodya-editor__tab[disabled] {
+  opacity: 0.48;
+  cursor: default;
+  transform: none;
+}
+
+.belovodya-editor__content,
+.belovodya-editor__preview-body {
+  min-height: 0;
+  overflow: auto;
+  padding: 14px;
+}
+
+.belovodya-editor__content > * {
+  width: 100%;
+}
+
+.belovodya-editor__state {
+  display: grid;
+  place-items: center;
+  min-height: 100%;
+  padding: 28px;
+  text-align: center;
+  color: rgba(180, 201, 216, 0.84);
+  line-height: 1.6;
+}
+
+.belovodya-editor__layout-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.belovodya-editor__field {
+  display: grid;
+  gap: 6px;
+}
+
+.belovodya-editor__field--full {
+  grid-column: 1 / -1;
+}
+
+.belovodya-editor__field label {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(141, 172, 194, 0.76);
+}
+
+.belovodya-editor__field input,
+.belovodya-editor__field select,
+.belovodya-editor__textarea {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(108, 156, 187, 0.24);
+  background: rgba(8, 19, 29, 0.78);
+  color: rgba(228, 239, 248, 0.96);
+  font: inherit;
+}
+
+.belovodya-editor__preview-shell {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.belovodya-editor__error {
+  color: #ff978a;
+}
+
+@media (max-width: 1100px) {
+  .belovodya-editor {
+    inset: 18px;
+  }
+
+  .belovodya-editor__body {
+    grid-template-columns: 1fr;
+  }
+}

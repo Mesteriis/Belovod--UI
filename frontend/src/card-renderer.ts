@@ -1,8 +1,8 @@
 import { LitElement, css, html, nothing, type PropertyValues, unsafeCSS } from "lit";
 
 import cardsCss from "../css/cards.css?inline";
+import { ensureCardHelpers } from "./lovelace-runtime";
 import type {
-  CardHelpers,
   HomeAssistant,
   LovelaceCardConfig,
   LovelaceCardElement,
@@ -91,30 +91,6 @@ const shouldApplyHassUpdate = (
   return entities.some((entityId) => nextHass.states[entityId] !== previousHass.states[entityId]);
 };
 
-const waitForCardHelpers = async (): Promise<CardHelpers> => {
-  for (let attempt = 0; attempt < 40; attempt += 1) {
-    if (typeof window.loadCardHelpers === "function") {
-      return window.loadCardHelpers();
-    }
-
-    await new Promise((resolve) => window.setTimeout(resolve, 50));
-  }
-
-  throw new Error(
-    "Home Assistant card helpers are unavailable. Open a Lovelace dashboard once and retry.",
-  );
-};
-
-let helpersPromise: Promise<CardHelpers> | undefined;
-
-const loadCardHelpers = (): Promise<CardHelpers> => {
-  if (!helpersPromise) {
-    helpersPromise = waitForCardHelpers();
-  }
-
-  return helpersPromise;
-};
-
 class BelovodyaCardHost extends LitElement {
   static properties = {
     hass: { attribute: false },
@@ -127,15 +103,20 @@ class BelovodyaCardHost extends LitElement {
     ${unsafeCSS(cardsCss)}
   `;
 
-  public hass?: HomeAssistant;
-  public config?: LovelaceCardConfig;
-  public visible = false;
+  declare public hass?: HomeAssistant;
+  declare public config?: LovelaceCardConfig;
+  declare public visible: boolean;
 
   private _card?: LovelaceCardElement;
   private _error?: string;
   private _mount?: HTMLDivElement | null;
   private _observer?: IntersectionObserver;
   private _entities: readonly string[] = Object.freeze([]);
+
+  constructor() {
+    super();
+    this.visible = false;
+  }
 
   protected override render() {
     return html`
@@ -227,7 +208,7 @@ class BelovodyaCardHost extends LitElement {
     }
 
     try {
-      const helpers = await loadCardHelpers();
+      const helpers = await ensureCardHelpers(this.hass);
       const card = helpers.createCardElement(this.config);
       enqueueMutation(() => {
         if (!this._mount) {

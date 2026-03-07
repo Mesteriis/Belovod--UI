@@ -1,5 +1,8 @@
 import type { LovelaceCardConfig } from "../types";
 
+export type LayoutPathSegment = string | number;
+export type LayoutPath = readonly LayoutPathSegment[];
+
 export type LayoutNode =
   | LayoutGridNode
   | LayoutStackNode
@@ -53,6 +56,7 @@ export interface LayoutFloatingNode extends LayoutBaseNode {
 export interface LayoutCardNode extends LayoutBaseNode {
   kind: "card";
   config: LovelaceCardConfig;
+  path: LayoutPath;
   columnSpan: number;
   rowSpan: number;
   minHeight?: string;

@@ -31,10 +31,15 @@ const cardMatchesSearch = (config: LovelaceCardConfig, query: string): boolean =
   return haystack.includes(query.toLowerCase());
 };
 
+export interface BelovodyaEditCardDetail {
+  node: LayoutCardNode;
+}
+
 class BelovodyaLayout extends LitElement {
   static properties = {
     hass: { attribute: false },
     layout: { attribute: false },
+    editable: { type: Boolean, reflect: true },
     searchQuery: { type: String },
   } as const;
 
@@ -43,9 +48,16 @@ class BelovodyaLayout extends LitElement {
     ${unsafeCSS(cardsCss)}
   `;
 
-  public hass?: HomeAssistant;
-  public layout?: LayoutNode;
-  public searchQuery = "";
+  declare public hass?: HomeAssistant;
+  declare public layout?: LayoutNode;
+  declare public editable: boolean;
+  declare public searchQuery: string;
+
+  constructor() {
+    super();
+    this.editable = false;
+    this.searchQuery = "";
+  }
 
   protected override render(): TemplateResult {
     if (!this.layout) {
@@ -89,7 +101,7 @@ class BelovodyaLayout extends LitElement {
   private _renderStack(node: LayoutStackNode): TemplateResult {
     return html`
       <section
-        class="belovodya-layout-stack"
+        class=${`belovodya-layout-stack belovodya-layout-stack--${node.direction}`}
         style=${styleMap({
           "--belovodya-stack-gap": node.gap,
           "--belovodya-stack-direction": node.direction,
@@ -130,16 +142,51 @@ class BelovodyaLayout extends LitElement {
     }
 
     return html`
-      <belovodya-card-host
-        class="belovodya-layout-card"
+      <div
+        class=${`belovodya-layout-card${this.editable ? " belovodya-layout-card--editable" : ""}`}
         style=${styleMap({
           "--belovodya-card-column-span": String(node.columnSpan),
           "--belovodya-card-row-span": String(node.rowSpan),
           "--belovodya-card-min-height": node.minHeight ?? "220px",
         })}
-        .config=${node.config}
-        .hass=${this.hass}
-      ></belovodya-card-host>
+      >
+        <belovodya-card-host
+          .config=${node.config}
+          .hass=${this.hass}
+          .visible=${true}
+        ></belovodya-card-host>
+        ${this.editable
+          ? html`
+              <button
+                class="belovodya-card-edit-chip"
+                type="button"
+                title="Редактировать карточку"
+                @click=${(event: Event) => this._requestEdit(event, node)}
+              >
+                ${this._renderEditIcon()} Редактировать
+              </button>
+            `
+          : null}
+      </div>
+    `;
+  }
+
+  private _requestEdit(event: Event, node: LayoutCardNode): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dispatchEvent(new CustomEvent<BelovodyaEditCardDetail>("belovodya-edit-card", {
+      bubbles: true,
+      composed: true,
+      detail: { node },
+    }));
+  }
+
+  private _renderEditIcon() {
+    return html`
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4.25 13.95V15.75H6.05L14.44 7.36L12.64 5.56L4.25 13.95Z"></path>
+        <path d="M15.23 6.57L13.43 4.77L14.33 3.87C14.73 3.48 15.36 3.48 15.76 3.87L16.13 4.24C16.52 4.64 16.52 5.27 16.13 5.67L15.23 6.57Z"></path>
+      </svg>
     `;
   }
 }
